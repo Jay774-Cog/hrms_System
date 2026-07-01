@@ -24,7 +24,7 @@ public class PayrollService {
     private AttendanceRepository attendanceRepository;
 
     public Payroll runPayroll(Payroll payroll, long id) {
-        boolean alreadyExists = payrollRepository.existsByEmployee_IdAndPayPeriod(id, payroll.getPayPeriod());
+        boolean alreadyExists = payrollRepository.existsByEmployee_EmployeeIdAndPayPeriod(id, payroll.getPayPeriod());
 
         if (alreadyExists) {
             throw new IllegalStateException("Payroll already generated for this Employee for " + payroll.getPayPeriod());
@@ -55,8 +55,7 @@ public class PayrollService {
         double totalDaysInMonth = 30.0;
         double dailyWage = gross / totalDaysInMonth;
 
-        List<Attendance> acceptedLeaves = attendanceRepository.findByEmployeeIdAndType(id, Attendance.LeaveStatus.APPROVED);
-
+        List<Attendance> acceptedLeaves = attendanceRepository.findByEmployee_EmployeeIdAndStatus(id, Attendance.LeaveStatus.APPROVED);
         long unpaidDays = 0;
 
         for (Attendance leave : acceptedLeaves) {
@@ -80,7 +79,7 @@ public class PayrollService {
     }
 
     public Payroll getLatestPayrollByEmployeeId(Long employeeId) {
-        return payrollRepository.findTopByEmployeeIdOrderByPayrollIdDesc(employeeId);
+        return payrollRepository.findTopByEmployee_EmployeeIdOrderByPayrollIdDesc(employeeId);
     }
 
     public void savePayroll(Payroll payroll) {
