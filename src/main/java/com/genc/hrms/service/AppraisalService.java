@@ -1,7 +1,9 @@
 package com.genc.hrms.service;
 
 import com.genc.hrms.model.AppraisalRecord;
+import com.genc.hrms.model.Employee;
 import com.genc.hrms.repository.AppraisalRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -11,6 +13,7 @@ import java.util.List;
 @Service
  public class AppraisalService {
 
+    @Autowired
     private final AppraisalRepository appraisalRepository;
 
     public AppraisalService(AppraisalRepository appraisalRepository) {
@@ -29,10 +32,13 @@ import java.util.List;
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "employeeId and appraisalCycle are required");
         }
 
-        AppraisalRecord record = appraisalRepository.findByEmployeeIdAndAppraisalCycle(employeeId, cycle)
+        AppraisalRecord record = appraisalRepository.findByEmployee_EmployeeIdAndAppraisalCycle(employeeId, cycle)
                 .orElse(new AppraisalRecord());
 
-        record.setEmployeeId(employeeId);
+        Employee employee = new Employee();
+        employee.setEmployeeId(employeeId); // Corrected to use setEmployeeId
+
+        record.setEmployee(employee);
         record.setAppraisalCycle(cycle);
         record.setAppraisalStatus(AppraisalRecord.AppraisalStatus.DRAFT);
         return appraisalRepository.save(record);
