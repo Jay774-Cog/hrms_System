@@ -1,11 +1,12 @@
 package com.genc.hrms.controller;
 
-import com.genc.hrms.dto.AppraisalDto;
+import com.hrms.performance.dto.AppraisalDto;
 import com.genc.hrms.model.AppraisalRecord;
 import com.genc.hrms.service.AppraisalService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/appraisal")

@@ -15,8 +15,10 @@ public class AppraisalRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long appraisalId;
 
-    @Column(name = "employeeId", nullable = false)
-    private Long employeeId;
+//    @Column(name = "employeeId", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 
     @Column(name = "appraisalCycle", length = 20)
     private String appraisalCycle;
@@ -35,51 +37,4 @@ public class AppraisalRecord {
         DRAFT, SELF_REVIEW, MANAGER_REVIEW, PUBLISHED
     }
 
-    public Long getAppraisalId() {
-        return appraisalId;
-    }
-
-    public void setAppraisalId(Long appraisalId) {
-        this.appraisalId = appraisalId;
-    }
-
-    public Long getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
-    }
-
-    public String getAppraisalCycle() {
-        return appraisalCycle;
-    }
-
-    public void setAppraisalCycle(String appraisalCycle) {
-        this.appraisalCycle = appraisalCycle;
-    }
-
-    public Integer getGoalsAchieved() {
-        return goalsAchieved;
-    }
-
-    public void setGoalsAchieved(Integer goalsAchieved) {
-        this.goalsAchieved = goalsAchieved;
-    }
-
-    public BigDecimal getOverallRating() {
-        return overallRating;
-    }
-
-    public void setOverallRating(BigDecimal overallRating) {
-        this.overallRating = overallRating;
-    }
-
-    public AppraisalStatus getAppraisalStatus() {
-        return appraisalStatus;
-    }
-
-    public void setAppraisalStatus(AppraisalStatus appraisalStatus) {
-        this.appraisalStatus = appraisalStatus;
-    }
 }
