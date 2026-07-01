@@ -12,7 +12,7 @@ public interface PayrollRepository extends JpaRepository<Payroll, Long> {
     List<Payroll> findByPayPeriod(String payPeriod);
 
 
-    boolean existsByEmployee_IdAndPayPeriod(Long employeeId, String payPeriod);
-
+    // Change to use the correct field name
+    boolean existsByEmployeeEmployeeIdAndPayPeriod(Long employeeId, String payPeriod);
 
 }

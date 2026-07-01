@@ -24,8 +24,8 @@ public class PayrollService {
     private AttendanceRepository attendanceRepository;
 
     public Payroll runPayroll(Payroll payroll, long id) {
-        boolean alreadyExists = payrollRepository.existsByEmployee_IdAndPayPeriod(id, payroll.getPayPeriod());
-
+    // In PayrollService.runPayroll:
+        boolean alreadyExists = payrollRepository.existsByEmployeeEmployeeIdAndPayPeriod(id, payroll.getPayPeriod());
         if (alreadyExists) {
             throw new IllegalStateException("Payroll already generated for this Employee for " + payroll.getPayPeriod());
         }

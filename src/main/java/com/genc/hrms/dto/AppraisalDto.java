@@ -1,4 +1,4 @@
-package com.hrms.performance.dto;
+package com.genc.hrms.dto;
 
 import java.math.BigDecimal;
 import lombok.Data; // Ensure you have Lombok dependency, or manually generate Getters and Setters
