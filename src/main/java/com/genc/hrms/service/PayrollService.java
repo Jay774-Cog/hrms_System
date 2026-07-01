@@ -33,7 +33,7 @@ public class PayrollService {
         double totalDeductions = deductions(payroll, id);
         payroll.setTotalDeductions(totalDeductions);
 
-        Employee employee = employeeRepository.findById(id);
+        Employee employee = employeeRepository.findByEmployeeId(id);
         if (employee == null) {
             throw new IllegalArgumentException("Invalid employee ID: " + id);
         }
@@ -46,7 +46,7 @@ public class PayrollService {
     }
 
     public double deductions(Payroll payroll, long id) {
-        Employee employee = employeeRepository.findById(id);
+        Employee employee = employeeRepository.findByEmployeeId(id);
         if (employee == null) {
             throw new IllegalArgumentException("Invalid employee ID: " + id);
         }
