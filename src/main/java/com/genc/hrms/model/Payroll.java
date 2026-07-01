@@ -95,7 +95,11 @@ public class Payroll {
             this.netSalary = netSalary;
         }
 
-        public PayrollStatus getStatus() { return status; }
-        public void setStatus(PayrollStatus status) { this.status = status; }
+    public  PayrollStatus getStatus() {
+        return status;
+    }
 
+    public void setStatus(PayrollStatus status) {
+        this.status = status;
+    }
 }

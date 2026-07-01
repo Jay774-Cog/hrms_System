@@ -1,4 +1,4 @@
 package com.genc.hrms.model;
 
-public class LeaveRequest {
+public class Attendace {
 }
