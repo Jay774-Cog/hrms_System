@@ -1,4 +1,4 @@
 package com.genc.hrms.repository;
 
-public class AttendanceRepository {
+public interface AttendanceRepository {
 }
