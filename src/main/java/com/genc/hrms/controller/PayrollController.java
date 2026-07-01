@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@RestController
+@CrossOrigin("*")
+@RequestMapping("/api/payroll")
 public class PayrollController {
 
-    @RestController
-    @CrossOrigin("*")
-    @RequestMapping("/api/payroll")
-    public class PayrollRestController {
+
+
 
         @Autowired
         private PayrollService payrollService;
@@ -165,4 +165,4 @@ public class PayrollController {
         }
     }
 
-}
+

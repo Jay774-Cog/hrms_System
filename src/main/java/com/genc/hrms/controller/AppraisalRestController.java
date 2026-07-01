@@ -1,4 +1,4 @@
-package com.hrms.performance.controller;
+package com.genc.hrms.controller;
 
 import com.hrms.performance.dto.AppraisalDto;
 import com.genc.hrms.model.AppraisalRecord;
