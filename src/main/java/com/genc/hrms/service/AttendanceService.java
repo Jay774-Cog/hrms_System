@@ -7,12 +7,13 @@ import com.genc.hrms.model.MarkAttendance;
 import com.genc.hrms.repository.AttendanceRepository;
 import com.genc.hrms.repository.MarkAttendanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-
+@Service
 public class AttendanceService {
 
     @Autowired
