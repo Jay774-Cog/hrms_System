@@ -1,5 +1,6 @@
 package com.genc.hrms.service;
 
+import com.genc.hrms.model.Employee;
 import com.genc.hrms.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
