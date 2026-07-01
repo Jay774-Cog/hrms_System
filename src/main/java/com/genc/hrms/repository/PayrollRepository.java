@@ -7,12 +7,12 @@ import java.util.List;
 
 public interface PayrollRepository extends JpaRepository<Payroll, Long> {
 
-    Payroll findTopByEmployeeIdOrderByPayrollIdDesc(Long employeeId);
+    Payroll findTopByEmployee_EmployeeIdOrderByPayrollIdDesc(Long employeeId);
 
     List<Payroll> findByPayPeriod(String payPeriod);
 
 
-    // Change to use the correct field name
-    boolean existsByEmployeeEmployeeIdAndPayPeriod(Long employeeId, String payPeriod);
+    boolean existsByEmployee_EmployeeIdAndPayPeriod(Long employeeId, String payPeriod);
+
 
 }
