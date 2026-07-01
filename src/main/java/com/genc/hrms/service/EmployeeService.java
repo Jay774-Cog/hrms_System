@@ -1,5 +1,6 @@
 package com.genc.hrms.service;
 
+import com.genc.hrms.model.Employee;
 import com.genc.hrms.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
@@ -56,7 +57,7 @@ public class EmployeeService {
         existing.setHireDate(employee.getHireDate());
 
         Employee updated = employeeRepository.save(existing);
-        log.info("Employee updated successfully with ID: {}", updated.getId());
+        log.info("Employee updated successfully with ID: {}", updated.getEmployeeId());
         return updated;
     }
 
@@ -82,7 +83,7 @@ public class EmployeeService {
 
     // Individual field accessors (matching controller mappings)
     public Long getId(Long id) {
-        return getEmployeeById(id).getId();
+        return getEmployeeById(id).getEmployeeId();
     }
 
     public String getName(Long id) {

@@ -1,7 +1,7 @@
 package com.genc.hrms.controller;
 
-import com.hrms.employee.model.Employee;
-import com.hrms.employee.service.EmployeeService;
+import com.genc.hrms.model.Employee;
+import com.genc.hrms.service.EmployeeService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 @RestController
@@ -18,6 +17,7 @@ public class EmployeeController {
 
 
 
+    @Autowired
     private final EmployeeService employeeService;
 
 
@@ -52,7 +52,7 @@ public class EmployeeController {
     public Employee createEmployee(@Valid @RequestBody Employee employee) {
         log.info("Received request to create employee: {}", employee.getName());
         Employee created = employeeService.createEmployee(employee);
-        log.info("Employee created successfully with ID: {}", created.getId());
+        log.info("Employee created successfully with ID: {}", created.getEmployeeId());
         return created;
     }
 
@@ -73,7 +73,7 @@ public class EmployeeController {
                                    @Valid @RequestBody Employee employee) {
         log.info("Updating employee with ID: {}", id);
         Employee updated = employeeService.updateEmployee(id, employee);
-        log.info("Employee updated successfully with ID: {}", updated.getId());
+        log.info("Employee updated successfully with ID: {}", updated.getEmployeeId());
         return updated;
     }
 

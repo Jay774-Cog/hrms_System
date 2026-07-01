@@ -19,7 +19,7 @@ public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long EmployeeId;
 
     @NotBlank(message = "Employee name is mandatory")
     @Column(nullable = false, length = 100)

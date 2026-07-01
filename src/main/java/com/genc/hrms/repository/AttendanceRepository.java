@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface AttendanceRepository extends JpaRepository<Attendance,Long> {
+
     Attendance save(Attendance attendance);
 
     //    employee
@@ -15,4 +16,6 @@ public interface AttendanceRepository extends JpaRepository<Attendance,Long> {
     List<Attendance> findByStatus(Attendance.LeaveStatus status);
 
     List<Attendance> findByLeaveTypeAndStatusAndEmployee_EmployeeId(Attendance.Leave leaveType, Attendance.LeaveStatus status, long id);
+
+
 }
