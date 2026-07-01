@@ -42,7 +42,7 @@ public class Payroll {
 
         @NotNull(message = "Status cannot be empty")
         @Enumerated(EnumType.STRING)
-        private PayrollStatus status;
+        private PayrollStatus payrollStatus;
 
         public enum PayrollStatus {
             DRAFT, PROCESSED, PAID, ON_HOLD
@@ -95,11 +95,11 @@ public class Payroll {
             this.netSalary = netSalary;
         }
 
-    public  PayrollStatus getStatus() {
-        return status;
+    public  PayrollStatus getPayrollStatus() {
+        return payrollStatus;
     }
 
-    public void setStatus(PayrollStatus status) {
-        this.status = status;
+    public void setPayrollStatus(PayrollStatus payrollStatus) {
+        this.payrollStatus = payrollStatus;
     }
 }

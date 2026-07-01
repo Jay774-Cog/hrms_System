@@ -1,5 +1,6 @@
 package com.genc.hrms.service;
 
+import com.genc.hrms.model.Attendance;
 import com.genc.hrms.model.Employee;
 import com.genc.hrms.model.Payroll;
 import com.genc.hrms.repository.AttendanceRepository;
@@ -37,7 +38,7 @@ public class PayrollService {
             throw new IllegalArgumentException("Invalid employee ID: " + id);
         }
 
-        double gross = employee.getBaseSalary();
+        double gross = employee.getSalary();
         payroll.setGrossSalary(gross);
         payroll.setNetSalary(gross - totalDeductions);
 
@@ -50,16 +51,16 @@ public class PayrollService {
             throw new IllegalArgumentException("Invalid employee ID: " + id);
         }
 
-        double gross = employee.getBaseSalary();
+        double gross = employee.getSalary();
         double totalDaysInMonth = 30.0;
         double dailyWage = gross / totalDaysInMonth;
 
-        List<Attendance> acceptedLeaves = attendanceRepository.findByEmployeeIdAndType(id, Attendance.AttedanceType.Accepted);
+        List<Attendance> acceptedLeaves = attendanceRepository.findByEmployeeIdAndType(id, Attendance.LeaveStatus.APPROVED);
 
         long unpaidDays = 0;
 
         for (Attendance leave : acceptedLeaves) {
-            if (Attendance.AttedanceLeave.Unpaid == leave.getLeaveType() || Attendance.AttedanceLeave.Sick == leave.getLeaveType()) {
+            if (Attendance.Leave.CASUAL == leave.getLeaveType() || Attendance.Leave.SICK == leave.getLeaveType()) {
                 long daysAbsent = ChronoUnit.DAYS.between(leave.getFromDate(), leave.getToDate()) + 1;
                 unpaidDays += daysAbsent;
             }

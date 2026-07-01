@@ -15,4 +15,8 @@ public interface AttendanceRepository extends JpaRepository<Attendance,Long> {
     List<Attendance> findByStatus(Attendance.LeaveStatus status);
 
     List<Attendance> findByLeaveTypeAndStatusAndEmployee_EmployeeId(Attendance.Leave leaveType, Attendance.LeaveStatus status, long id);
+
+    List<Attendance> findByEmployeeIdAndType(long employeeId, Attendance.LeaveStatus type);
+
 }
+

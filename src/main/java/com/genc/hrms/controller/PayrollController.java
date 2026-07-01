@@ -54,9 +54,9 @@ public class PayrollController {
 
                 // 3. Set the math fields before saving (so you don't have to send them in Postman)
                 double deductions = payrollService.deductions(payroll, realEmployee.getId());
-                payroll.setGrossSalary(realEmployee.getBaseSalary());
+                payroll.setGrossSalary(realEmployee.getSalary());
                 payroll.setTotalDeductions(deductions);
-                payroll.setNetSalary(realEmployee.getBaseSalary() - deductions);
+                payroll.setNetSalary(realEmployee.getSalary() - deductions);
 
                 // 4. Run the service
                 payrollService.runPayroll(payroll, realEmployee.getId());
@@ -77,7 +77,7 @@ public class PayrollController {
 
             // Do the math using the REAL database salary
             double deductions = payrollService.deductions(payroll, realEmployee.getId());
-            double grossSalary = realEmployee.getBaseSalary();
+            double grossSalary = realEmployee.getSalary();
             double netSalary = grossSalary - deductions;
 
             Map<String, Double> response = new HashMap<>();
@@ -104,7 +104,7 @@ public class PayrollController {
         @GetMapping("/payslip")
         public ResponseEntity<Payroll> generatePayslip(@RequestParam("employeeId") Long employeeId) {
             Payroll payroll = payrollService.getLatestPayrollByEmployeeId(employeeId);
-            if (payroll != null && payroll.getStatus() == Payroll.PayrollStatus.PAID) {
+            if (payroll != null && payroll.getPayrollStatus() == Payroll.PayrollStatus.PAID) {
                 return ResponseEntity.ok(payroll);
             }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -115,7 +115,7 @@ public class PayrollController {
         public ResponseEntity<?> markAsPaid(@PathVariable("employeeId") Long employeeId) {
             Payroll payroll = payrollService.getLatestPayrollByEmployeeId(employeeId);
             if (payroll != null) {
-                payroll.setStatus(Payroll.PayrollStatus.PAID);
+                payroll.setPayrollStatus(Payroll.PayrollStatus.PAID);
                 payrollService.savePayroll(payroll);
                 return ResponseEntity.ok(Map.of("message", "Status updated to PAID"));
             }
@@ -146,7 +146,7 @@ public class PayrollController {
                 if (p.getGrossSalary() != null) totalGross += p.getGrossSalary();
                 if (p.getNetSalary() != null) totalNetPay += p.getNetSalary();
 
-                if (p.getStatus() != null && "PAID".equalsIgnoreCase(p.getStatus().name())) {
+                if (p.getPayrollStatus() != null && "PAID".equalsIgnoreCase(p.getPayrollStatus().name())) {
                     paidCount++;
                 } else {
                     pendingCount++;

@@ -1,7 +1,8 @@
 package com.genc.hrms.controller;
 
-import com.hrms.employee.model.Employee;
-import com.hrms.employee.service.EmployeeService;
+
+import com.genc.hrms.model.Employee;
+import com.genc.hrms.service.EmployeeService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
