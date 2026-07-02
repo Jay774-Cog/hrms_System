@@ -108,7 +108,7 @@ public class AttendanceService {
         int earned = attendanceRepository.findByLeaveTypeAndStatusAndEmployee_EmployeeId(
                 Attendance.Leave.EARNED, Attendance.LeaveStatus.APPROVED, empId).size();
 
-        return new LeaveDto(casual, sick, earned);
+        return new LeaveDto(sick, casual, earned);
     }
 
     public List<Attendance> getLeaveHistory(){
