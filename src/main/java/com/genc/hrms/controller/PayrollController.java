@@ -97,9 +97,9 @@ public class PayrollController {
         }
 
         // 6. Update status to PAID (Using PUT or PATCH is more RESTful than GET for state changes)
-        @PutMapping("/payslip/markAsPaid/{employeeId}")
-        public ResponseEntity<?> markAsPaid(@PathVariable("employeeId") Long employeeId) {
-            Payroll payroll = payrollService.getLatestPayrollByEmployeeId(employeeId);
+        @PutMapping("/markAsPaid/{payrollId}")
+        public ResponseEntity<?> markAsPaid(@PathVariable("payrollId") Long payrollId) {
+            Payroll payroll = payrollService.getPayrollById(payrollId);
             if (payroll != null) {
                 payroll.setPayrollStatus(Payroll.PayrollStatus.PAID);
                 payrollService.savePayroll(payroll);

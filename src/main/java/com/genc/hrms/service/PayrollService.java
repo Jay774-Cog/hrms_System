@@ -109,5 +109,10 @@ public class PayrollService {
         // 4. Save using the standard repository method
         payrollRepository.save(payroll);
     }
+    // Add this to PayrollService.java
+    public Payroll getPayrollById(Long payrollId) {
+        // findById returns an Optional, so we use orElse(null) to handle if it's not found
+        return payrollRepository.findById(payrollId).orElse(null);
+    }
 }
 

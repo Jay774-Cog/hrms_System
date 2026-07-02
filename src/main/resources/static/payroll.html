@@ -189,9 +189,9 @@
                     <select id="payrollStatus" required>
                         <option >Select Status...</option>
                         <option value="DRAFT">DRAFT</option>
-                        <option value="PENDING">PENDING</option>
-                        <option value="PAID">PAID</option>
+                        <option value="PROCESSED">PROCESSED</option>
                         <option value="ON_HOLD">ON_HOLD</option>
+                        <option value="PAID">PAID</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -270,17 +270,17 @@
             return;
         }
 
-        const filtered = globalEmployeeData.filter(emp => emp.id.toString().includes(query));
+        const filtered = globalEmployeeData.filter(emp => emp.employeeId.toString().includes(query));
 
         if (filtered.length > 0) {
             resultsContainer.style.display = 'block';
             filtered.forEach(emp => {
                 const div = document.createElement('div');
-                div.textContent = `Employee ID: ${emp.id} - ${emp.name}`;
+                div.textContent = `Employee ID: ${emp.employeeId} - ${emp.name}`;
 
                 div.onclick = () => {
-                    searchInput.value = emp.id;
-                    salaryInput.value = emp.baseSalary;
+                    searchInput.value = emp.employeeId;
+                    salaryInput.value = emp.salary;
                     resultsContainer.style.display = 'none';
                 };
                 resultsContainer.appendChild(div);
@@ -300,9 +300,9 @@
 
         const payload = {
             payPeriod: document.getElementById('payPeriod').value,
-            status: document.getElementById('payrollStatus').value,
+            payrollStatus: document.getElementById('payrollStatus').value,
             employee: {
-                id: parseInt(document.getElementById('empIdSearch').value,10)
+                employeeId: parseInt(document.getElementById('empIdSearch').value,10)
             }
         };
 
@@ -385,17 +385,17 @@
             }
 
             data.payrolls.forEach(p => {
-                const isPaid = p.status === 'PAID';
+                const isPaid = p.payrollStatus === 'PAID';
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${p.payrollId || 'N/A'}</td>
-                    <td>Emp ID: ${p.employee ? p.employee.id : 'N/A'}</td>
+                    <td>Emp ID: ${p.employee ? p.employee.employeeId : 'N/A'}</td>
                     <td>${p.payPeriod}</td>
                     <td>₹${(p.grossSalary || 0).toFixed(2)}</td>
                     <td>₹${(p.totalDeductions || 0).toFixed(2)}</td>
                     <td>₹${(p.netSalary || 0).toFixed(2)}</td>
-                    <td class="status status-${p.status}">${p.status}</td>
+                    <td class="status status-${p.payrollStatus}">${p.payrollStatus}</td>
                     <td>
 ${!isPaid ? `<button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;" onclick="markAsPaid(${p.payrollId})">Mark as Paid</button>` : '-'}                    </td>
                 `;

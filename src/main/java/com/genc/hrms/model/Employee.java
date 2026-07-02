@@ -1,6 +1,9 @@
 package com.genc.hrms.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,6 +19,10 @@ import java.time.LocalDate;
 @Data // generates getters, setters, toString, equals, hashCode
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "employeeId"
+)
 public class Employee {
 
     @Id
@@ -54,7 +61,7 @@ public class Employee {
     // Self-referencing relationship for manager assignment
     @ManyToOne
     @JoinColumn(name = "manager_id")
-    @JsonIgnoreProperties({"manager", "subordinates"}) // Prevents manager-to-manager infinite loops
+//    @JsonIgnoreProperties({"manager", "subordinates"}) // Prevents manager-to-manager infinite loops
     private Employee manager;
 }
 
