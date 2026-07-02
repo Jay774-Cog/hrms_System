@@ -21,7 +21,7 @@ public class AttendanceService {
     @Autowired
     private MarkAttendanceRepository markAttendanceRepository;
 
-    long empId=12;
+    long empId=2;
 
     // for employee saving leave requests
     public void saveLeaveRequest(Attendance attendance)
@@ -108,7 +108,7 @@ public class AttendanceService {
         int earned = attendanceRepository.findByLeaveTypeAndStatusAndEmployee_EmployeeId(
                 Attendance.Leave.EARNED, Attendance.LeaveStatus.APPROVED, empId).size();
 
-        return new LeaveDto(casual, sick, earned);
+        return new LeaveDto(sick, casual, earned);
     }
 
     public List<Attendance> getLeaveHistory(){

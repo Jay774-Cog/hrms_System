@@ -1,5 +1,6 @@
 package com.genc.hrms.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
@@ -16,6 +17,7 @@ public class Attendance {
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
+    @JsonIgnoreProperties({"manager", "subordinates"}) // Prevents manager-to-manager infinite loops
     private Employee employee;
 
     private long totalDays;
