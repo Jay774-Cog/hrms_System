@@ -21,7 +21,7 @@ public class AttendanceService {
     @Autowired
     private MarkAttendanceRepository markAttendanceRepository;
 
-    long empId=12;
+    long empId=2;
 
     // for employee saving leave requests
     public void saveLeaveRequest(Attendance attendance)

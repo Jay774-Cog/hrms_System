@@ -1,5 +1,6 @@
 package com.genc.hrms.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -53,6 +54,7 @@ public class Employee {
     // Self-referencing relationship for manager assignment
     @ManyToOne
     @JoinColumn(name = "manager_id")
+    @JsonIgnoreProperties({"manager", "subordinates"}) // Prevents manager-to-manager infinite loops
     private Employee manager;
 }
 
