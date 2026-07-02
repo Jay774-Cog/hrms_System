@@ -37,7 +37,6 @@ public class PayrollController {
             return ResponseEntity.ok(response);
         }
 
-
         // 2. Run Payroll (Expects JSON in the request body)
         @PostMapping("/run")
         public ResponseEntity<?> runPayroll(@RequestBody Payroll payroll) {
@@ -139,7 +138,6 @@ public class PayrollController {
                     pendingCount++;
                 }
             }
-
             Map<String, Object> dashboardData = new HashMap<>();
             dashboardData.put("selectedMonth", month == null || month.isEmpty() ? "ALL" : month);
             dashboardData.put("totalGross", totalGross);

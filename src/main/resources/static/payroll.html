@@ -302,7 +302,7 @@
             payPeriod: document.getElementById('payPeriod').value,
             status: document.getElementById('payrollStatus').value,
             employee: {
-                id: document.getElementById('empIdSearch').value
+                id: parseInt(document.getElementById('empIdSearch').value,10)
             }
         };
 
@@ -397,8 +397,7 @@
                     <td>₹${(p.netSalary || 0).toFixed(2)}</td>
                     <td class="status status-${p.status}">${p.status}</td>
                     <td>
-                        ${!isPaid ? `<button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;" onclick="markAsPaid(${p.employee.id})">Mark as Paid</button>` : '-'}
-                    </td>
+${!isPaid ? `<button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;" onclick="markAsPaid(${p.payrollId})">Mark as Paid</button>` : '-'}                    </td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -408,24 +407,25 @@
     }
 
     // --- 6. Mark Payroll as Paid ---
-    async function markAsPaid(employeeId) {
-        try {
-            const response = await fetch(`${API_BASE_URL}/payslip/markAsPaid/${employeeId}`, {
-                method: 'PUT'
-            });
+    // Update the function to accept payrollId and hit the corrected endpoint
+async function markAsPaid(payrollId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/markAsPaid/${payrollId}`, {
+            method: 'PUT'
+        });
 
-            if (response.ok) {
-                alert("Marked as PAID successfully!");
-                // Keep UI in sync with DB
-                loadSummaryData();
-                loadTableData();
-            } else {
-                alert("Failed to update status.");
-            }
-        } catch (error) {
-            console.error("Error updating status:", error);
+        if (response.ok) {
+            alert("Marked as PAID successfully!");
+            // Keep UI in sync with DB
+            loadSummaryData();
+            loadTableData();
+        } else {
+            alert("Failed to update status.");
         }
+    } catch (error) {
+        console.error("Error updating status:", error);
     }
+}
 </script>
 
 </body>
