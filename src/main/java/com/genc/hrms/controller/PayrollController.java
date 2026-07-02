@@ -19,9 +19,6 @@ import java.util.Map;
 @RequestMapping("/api/payroll")
 public class PayrollController {
 
-
-
-
         @Autowired
         private PayrollService payrollService;
 
@@ -43,26 +40,16 @@ public class PayrollController {
 
         // 2. Run Payroll (Expects JSON in the request body)
         @PostMapping("/run")
-        public ResponseEntity<?> runPayroll(@Valid @RequestBody Payroll payroll) {
+        public ResponseEntity<?> runPayroll(@RequestBody Payroll payroll) {
             try {
-                // 1. Fetch the real employee from the DB to ensure they exist and we have their real salary
-                Employee realEmployee = employeeRepository.findById(payroll.getEmployee().getEmployeeId())
-                        .orElseThrow(() -> new IllegalStateException("Employee not found"));
-
-                // 2. Attach the real employee to the payroll object
-                payroll.setEmployee(realEmployee);
-
-                // 3. Set the math fields before saving (so you don't have to send them in Postman)
-                double deductions = payrollService.deductions(payroll, realEmployee.getEmployeeId());
-                payroll.setGrossSalary(realEmployee.getSalary());
-                payroll.setTotalDeductions(deductions);
-                payroll.setNetSalary(realEmployee.getSalary() - deductions);
-
-                // 4. Run the service
-                payrollService.runPayroll(payroll, realEmployee.getEmployeeId());
+                // Delegate all heavy lifting to the optimized service method
+                payrollService.processAndSavePayroll(payroll);
                 return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "Payroll executed successfully"));
             } catch (IllegalStateException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+            } catch (Exception e) {
+                // Tip: Add a logger here in production (e.g., log.error("Payroll failed", e);)
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "An unexpected error occurred."));
             }
         }
 

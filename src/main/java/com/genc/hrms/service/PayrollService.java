@@ -6,6 +6,7 @@ import com.genc.hrms.model.Payroll;
 import com.genc.hrms.repository.AttendanceRepository;
 import com.genc.hrms.repository.EmployeeRepository;
 import com.genc.hrms.repository.PayrollRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -88,6 +89,25 @@ public class PayrollService {
     }
     public List<Payroll> getPayrollsByMonth(String payPeriod) {
         return payrollRepository.findByPayPeriod(payPeriod);
+    }
+
+    @Transactional // 🔥 CRUCIAL: Keeps a single DB connection open for all operations below
+    public void processAndSavePayroll(Payroll payroll) {
+        // 1. Fetch employee
+        Employee realEmployee = employeeRepository.findById(payroll.getEmployee().getEmployeeId())
+                .orElseThrow(() -> new IllegalStateException("Employee not found"));
+
+        // 2. Calculate deductions
+        double deductions = this.deductions(payroll, realEmployee.getEmployeeId());
+
+        // 3. Populate entity
+        payroll.setEmployee(realEmployee);
+        payroll.setGrossSalary(realEmployee.getSalary());
+        payroll.setTotalDeductions(deductions);
+        payroll.setNetSalary(realEmployee.getSalary() - deductions);
+
+        // 4. Save using the standard repository method
+        payrollRepository.save(payroll);
     }
 }
 
