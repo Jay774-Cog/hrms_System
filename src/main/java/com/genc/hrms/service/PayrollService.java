@@ -97,6 +97,14 @@ public class PayrollService {
         Employee realEmployee = employeeRepository.findById(payroll.getEmployee().getEmployeeId())
                 .orElseThrow(() -> new IllegalStateException("Employee not found"));
 
+        boolean alreadyExists = payrollRepository.existsByEmployee_EmployeeIdAndPayPeriod(
+                realEmployee.getEmployeeId(),
+                payroll.getPayPeriod()
+        );
+
+        if (alreadyExists) {
+            throw new IllegalStateException("Payroll already generated for Employee ID " + realEmployee.getEmployeeId() + " for period " + payroll.getPayPeriod());
+        }
         // 2. Calculate deductions
         double deductions = this.deductions(payroll, realEmployee.getEmployeeId());
 

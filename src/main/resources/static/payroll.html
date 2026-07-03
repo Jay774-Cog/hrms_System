@@ -323,7 +323,11 @@
                 loadTableData();
             } else {
                 const errorData = await response.json();
-                alert("Failed: " + JSON.stringify(errorData));
+                if (errorData.error) {
+                    alert(errorData.error); // Shows: "Payroll already generated for..."
+                } else {
+                    alert("Failed to submit payroll. Please check your inputs.");
+                }
             }
         } catch (error) {
             console.error("Error running payroll:", error);
