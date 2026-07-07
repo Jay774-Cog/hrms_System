@@ -1,7 +1,6 @@
 package com.genc.hrms.controller;
 
 import com.genc.hrms.model.Payroll;
-import com.genc.hrms.service.PayrollService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
