@@ -1,5 +1,4 @@
 package com.genc.hrms.service;
-
 import com.genc.hrms.model.Attendance;
 import com.genc.hrms.model.Employee;
 import com.genc.hrms.model.Payroll;
@@ -11,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PayrollService {
+
     @Autowired
     private EmployeeRepository employeeRepository;
 
@@ -24,26 +26,99 @@ public class PayrollService {
     @Autowired
     private AttendanceRepository attendanceRepository;
 
-    public Payroll runPayroll(Payroll payroll, long id) {
-        boolean alreadyExists = payrollRepository.existsByEmployee_EmployeeIdAndPayPeriod(id, payroll.getPayPeriod());
+    public Map<String, Object> getFormData() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("statuses", Payroll.PayrollStatus.values());
+        response.put("employees", employeeRepository.findAll());
+        return response;
+    }
+
+    public List<Payroll> getPayrolls(String month) {
+        if (month == null || month.trim().isEmpty() || "ALL".equalsIgnoreCase(month)) {
+            return payrollRepository.findAll();
+        } else {
+            return payrollRepository.findByPayPeriod(month);
+        }
+    }
+
+    public Map<String, Object> getDashboardData(String month) {
+        List<Payroll> payrolls = getPayrolls(month);
+
+        double totalGross = 0;
+        double totalNetPay = 0;
+        int paidCount = 0;
+        int pendingCount = 0;
+
+        for (Payroll p : payrolls) {
+            if (p.getGrossSalary() != null) totalGross += p.getGrossSalary();
+            if (p.getNetSalary() != null) totalNetPay += p.getNetSalary();
+
+            if (p.getPayrollStatus() != null && "PAID".equalsIgnoreCase(p.getPayrollStatus().name())) {
+                paidCount++;
+            } else {
+                pendingCount++;
+            }
+        }
+
+        Map<String, Object> dashboardData = new HashMap<>();
+        dashboardData.put("selectedMonth", (month == null || month.isEmpty()) ? "ALL" : month);
+        dashboardData.put("totalGross", totalGross);
+        dashboardData.put("totalNetPay", totalNetPay);
+        dashboardData.put("paidCount", paidCount);
+        dashboardData.put("pendingCount", pendingCount);
+        dashboardData.put("payrolls", payrolls);
+
+        return dashboardData;
+    }
+
+    @Transactional
+    public void processAndSavePayroll(Payroll payroll) {
+        // 1. SAFETY CHECKS: Make sure the frontend sent the right data
+        if (payroll.getEmployee() == null || payroll.getEmployee().getEmployeeId() == null || payroll.getEmployee().getEmployeeId() <= 0) {
+            throw new IllegalStateException("Employee ID is missing or invalid.");
+        }
+        if (payroll.getPayPeriod() == null || payroll.getPayPeriod().trim().isEmpty()) {
+            throw new IllegalStateException("Pay period (month) is missing.");
+        }
+
+        // 2. Fetch employee
+        Employee realEmployee = employeeRepository.findById(payroll.getEmployee().getEmployeeId())
+                .orElseThrow(() -> new IllegalStateException("Employee not found in database."));
+
+        // 3. DUPLICATE CHECK: This stops the same employee from being entered twice in a month!
+        boolean alreadyExists = payrollRepository.existsByEmployee_EmployeeIdAndPayPeriod(
+                realEmployee.getEmployeeId(), payroll.getPayPeriod());
 
         if (alreadyExists) {
-            throw new IllegalStateException("Payroll already generated for this Employee for " + payroll.getPayPeriod());
+            throw new IllegalStateException("Payroll already generated for Employee ID " + realEmployee.getEmployeeId() + " for month: " + payroll.getPayPeriod());
         }
 
-        double totalDeductions = deductions(payroll, id);
-        payroll.setTotalDeductions(totalDeductions);
+        // 4. Calculate deductions
+        double deductions = this.deductions(payroll, realEmployee.getEmployeeId());
 
-        Employee employee = employeeRepository.findByEmployeeId(id);
-        if (employee == null) {
-            throw new IllegalArgumentException("Invalid employee ID: " + id);
-        }
+        // 5. Populate entity
+        payroll.setEmployee(realEmployee);
+        payroll.setGrossSalary(realEmployee.getSalary());
+        payroll.setTotalDeductions(deductions);
+        payroll.setNetSalary(realEmployee.getSalary() - deductions);
 
-        double gross = employee.getSalary();
-        payroll.setGrossSalary(gross);
-        payroll.setNetSalary(gross - totalDeductions);
 
-        return payrollRepository.save(payroll);
+        payrollRepository.save(payroll);
+    }
+    public Map<String, Double> computeStatutoryDeductions(Payroll payroll) {
+        Employee realEmployee = employeeRepository.findById(payroll.getEmployee().getEmployeeId())
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+
+        double deductions = this.deductions(payroll, realEmployee.getEmployeeId());
+        double grossSalary = realEmployee.getSalary();
+        double netSalary = grossSalary - deductions;
+
+        Map<String, Double> response = new HashMap<>();
+        response.put("deduct", deductions);
+        response.put("grossSalary", grossSalary);
+        response.put("netSalary", netSalary);
+
+        return response;
     }
 
     public double deductions(Payroll payroll, long id) {
@@ -74,7 +149,23 @@ public class PayrollService {
 
         return pf + tds + esi + leaveDeduction;
     }
+    public Payroll generateValidPayslip(Long employeeId) {
+        Payroll payroll = getLatestPayrollByEmployeeId(employeeId);
+        if (payroll != null && payroll.getPayrollStatus() == Payroll.PayrollStatus.PAID) {
+            return payroll;
+        }
+        return null;
+    }
 
+    public boolean markAsPaid(int payrollId) {
+        Payroll payroll = payrollRepository.findById(payrollId).orElse(null);
+        if (payroll != null) {
+            payroll.setPayrollStatus(Payroll.PayrollStatus.PAID);
+            payrollRepository.save(payroll);
+            return true;
+        }
+        return false;
+    }
     public List<Payroll> getData() {
         return payrollRepository.findAll();
     }
@@ -85,42 +176,9 @@ public class PayrollService {
 
     public void savePayroll(Payroll payroll) {
         payrollRepository.save(payroll);
-
     }
+
     public List<Payroll> getPayrollsByMonth(String payPeriod) {
         return payrollRepository.findByPayPeriod(payPeriod);
     }
-
-    @Transactional // 🔥 CRUCIAL: Keeps a single DB connection open for all operations below
-    public void processAndSavePayroll(Payroll payroll) {
-        // 1. Fetch employee
-        Employee realEmployee = employeeRepository.findById(payroll.getEmployee().getEmployeeId())
-                .orElseThrow(() -> new IllegalStateException("Employee not found"));
-
-        boolean alreadyExists = payrollRepository.existsByEmployee_EmployeeIdAndPayPeriod(
-                realEmployee.getEmployeeId(),
-                payroll.getPayPeriod()
-        );
-
-        if (alreadyExists) {
-            throw new IllegalStateException("Payroll already generated for Employee ID " + realEmployee.getEmployeeId() + " for period " + payroll.getPayPeriod());
-        }
-        // 2. Calculate deductions
-        double deductions = this.deductions(payroll, realEmployee.getEmployeeId());
-
-        // 3. Populate entity
-        payroll.setEmployee(realEmployee);
-        payroll.setGrossSalary(realEmployee.getSalary());
-        payroll.setTotalDeductions(deductions);
-        payroll.setNetSalary(realEmployee.getSalary() - deductions);
-
-        // 4. Save using the standard repository method
-        payrollRepository.save(payroll);
-    }
-    // Add this to PayrollService.java
-    public Payroll getPayrollById(Long payrollId) {
-        // findById returns an Optional, so we use orElse(null) to handle if it's not found
-        return payrollRepository.findById(payrollId).orElse(null);
-    }
 }
-

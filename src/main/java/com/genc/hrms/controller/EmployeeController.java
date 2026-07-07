@@ -36,7 +36,6 @@ public class EmployeeController {
     }
 
 
-
     // Get employee by ID
     @GetMapping("/{id}")
     public Employee getEmployeeDetails(@PathVariable Long id) {
