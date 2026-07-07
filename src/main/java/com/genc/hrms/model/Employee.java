@@ -19,10 +19,11 @@ import java.time.LocalDate;
 @Data // generates getters, setters, toString, equals, hashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "employeeId"
-)
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "employeeId"
+//)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Employee {
 
     @Id
@@ -59,9 +60,9 @@ public class Employee {
     private String status; // e.g. "Active", "Inactive", "On Leave"
 
     // Self-referencing relationship for manager assignment
-    @ManyToOne
-    @JoinColumn(name = "manager_id")
-//    @JsonIgnoreProperties({"manager", "subordinates"}) // Prevents manager-to-manager infinite loops
-    private Employee manager;
+//    @ManyToOne
+//    @JoinColumn(name = "manager_id")
+////    @JsonIgnoreProperties({"manager", "subordinates"}) // Prevents manager-to-manager infinite loops
+//    private Employee manager;
 }
 

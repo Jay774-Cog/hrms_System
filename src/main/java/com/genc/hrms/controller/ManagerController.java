@@ -8,18 +8,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/manager")
-@CrossOrigin(origins = "*")
+@RequestMapping("/api/manager")
 public class ManagerController {
     @Autowired
     private ManagerService managerService;
 
-    @PostMapping("/approve/{leaveId}")
+    @PutMapping("/approve/{leaveId}")
     public void approveLeaveRequest(@PathVariable long leaveId) {
         managerService.approveLeaveRequest(leaveId);
     }
 
-    @PostMapping("/reject/{leaveId}")
+    @PutMapping("/reject/{leaveId}")
     public void rejectLeaveRequest(@PathVariable long leaveId) {
         managerService.rejectLeaveRequest(leaveId);
     }

@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 public class HomeDto {
     LeaveDto leaveDto;
+    String employeeName;
     List<Attendance> attendanceList;
     List<MarkAttendance> markAttendanceList;
 }

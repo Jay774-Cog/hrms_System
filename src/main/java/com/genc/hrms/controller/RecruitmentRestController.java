@@ -23,7 +23,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/recruitment")
-@CrossOrigin(origins = "*")
 public class RecruitmentRestController {
 
     private static final Logger logger = LoggerFactory.getLogger(RecruitmentRestController.class);

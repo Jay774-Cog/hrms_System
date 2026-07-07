@@ -12,7 +12,7 @@ public class Payroll {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name="payroll_id")
-        private int payrollId;
+        private Long payrollId;
 
 
         @ManyToOne(fetch = FetchType.EAGER)
@@ -54,8 +54,8 @@ public class Payroll {
         public Payroll() {}
 
 
-        public int getPayrollId() { return payrollId; }
-        public void setPayrollId(int payrollId) { this.payrollId = payrollId; }
+        public long getPayrollId() { return payrollId; }
+        public void setPayrollId(long payrollId) { this.payrollId = payrollId; }
 
         public Employee getEmployee() { return employee; }
         public void setEmployee(Employee employee) { this.employee = employee; }
