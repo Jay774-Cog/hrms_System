@@ -28,17 +28,14 @@ public class Payroll {
         @NotNull(message = "Gross salary is required")
         @PositiveOrZero(message = "Gross salary cannot be negative")
         @Column(name="gross_salary")
-//    private double grossSalary;
 
         private  Double grossSalary;
 
         @PositiveOrZero(message = "Total deductions cannot be negative")
         @Column(name="total_deductions")
-//    private double totalDeductions;
         private Double totalDeductions;
         @PositiveOrZero(message = "Net salary cannot be negative")
         @Column(name="net_salary")
-//    private double netSalary;
         private Double netSalary;
 
         @NotNull(message = "Status cannot be empty")
@@ -62,15 +59,6 @@ public class Payroll {
 
         public String getPayPeriod() { return payPeriod; }
         public void setPayPeriod(String payPeriod) { this.payPeriod = payPeriod; }
-
-//    public double getGrossSalary() { return grossSalary; }
-//    public void setGrossSalary(double grossSalary) { this.grossSalary = grossSalary; }
-//
-//    public double getTotalDeductions() { return totalDeductions; }
-//    public void setTotalDeductions(double totalDeductions) { this.totalDeductions = totalDeductions; }
-//
-//    public double getNetSalary() { return netSalary; }
-//    public void setNetSalary(double netSalary) { this.netSalary = netSalary; }
 
         public Double getGrossSalary() {
             return grossSalary;
