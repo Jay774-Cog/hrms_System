@@ -157,7 +157,7 @@ public class PayrollService {
         return null;
     }
 
-    public boolean markAsPaid(Long payrollId) {
+    public boolean markAsPaid(long payrollId) {
         Payroll payroll = payrollRepository.findById(payrollId).orElse(null);
         if (payroll != null) {
             payroll.setPayrollStatus(Payroll.PayrollStatus.PAID);
