@@ -146,11 +146,11 @@ public class EmployeeController {
     }
 
 
-
-    @GetMapping("/{id}/getManager")
-    public Employee getManager(@PathVariable Long id){
-        return employeeService.getManager(id);
-    }
+//
+//    @GetMapping("/{id}/getManager")
+//    public Employee getManager(@PathVariable Long id){
+//        return employeeService.getManager(id);
+//    }
 }
 
 

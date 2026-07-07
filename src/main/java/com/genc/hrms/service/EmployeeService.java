@@ -74,7 +74,7 @@ public class EmployeeService {
         Employee employee = getEmployeeById(id);
         Employee manager = getEmployeeById(managerId);
 
-        employee.setManager(manager);
+//        employee.setManager(manager);
         Employee updated = employeeRepository.save(employee);
 
         log.info("Manager assigned successfully to employee ID {}", id);
@@ -114,8 +114,8 @@ public class EmployeeService {
         return getEmployeeById(id).getStatus();
     }
 
-    public Employee getManager(Long id) {
-        return getEmployeeById(id).getManager();
-    }
+//    public Employee getManager(Long id) {
+//        return getEmployeeById(id).getManager();
+//    }
 }
 

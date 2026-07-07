@@ -9,6 +9,7 @@ import lombok.Data;
 import java.time.LocalDate;
 @Entity
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Attendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

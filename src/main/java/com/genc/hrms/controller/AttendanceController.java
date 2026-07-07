@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/leave")
-@CrossOrigin(origins = "*")
+@RequestMapping("/api/leave")
 public class AttendanceController {
     @Autowired
     private AttendanceService attendanceService;
@@ -27,6 +26,7 @@ public class AttendanceController {
     public HomeDto getLeaveSummary() {
         return new HomeDto(
                 attendanceService.leaves(),
+                attendanceService.getEmployeeName(),
                 attendanceService.getLeaveHistory(),
                 attendanceService.getTimeSheetHistory()
         );
