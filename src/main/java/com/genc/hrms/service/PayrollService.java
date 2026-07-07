@@ -73,7 +73,6 @@ public class PayrollService {
 
     @Transactional
     public void processAndSavePayroll(Payroll payroll) {
-        // 1. SAFETY CHECKS: Make sure the frontend sent the right data
         if (payroll.getEmployee() == null || payroll.getEmployee().getEmployeeId() == null || payroll.getEmployee().getEmployeeId() <= 0) {
             throw new IllegalStateException("Employee ID is missing or invalid.");
         }
@@ -81,11 +80,9 @@ public class PayrollService {
             throw new IllegalStateException("Pay period (month) is missing.");
         }
 
-        // 2. Fetch employee
         Employee realEmployee = employeeRepository.findById(payroll.getEmployee().getEmployeeId())
                 .orElseThrow(() -> new IllegalStateException("Employee not found in database."));
 
-        // 3. DUPLICATE CHECK: This stops the same employee from being entered twice in a month!
         boolean alreadyExists = payrollRepository.existsByEmployee_EmployeeIdAndPayPeriod(
                 realEmployee.getEmployeeId(), payroll.getPayPeriod());
 
@@ -93,10 +90,8 @@ public class PayrollService {
             throw new IllegalStateException("Payroll already generated for Employee ID " + realEmployee.getEmployeeId() + " for month: " + payroll.getPayPeriod());
         }
 
-        // 4. Calculate deductions
         double deductions = this.deductions(payroll, realEmployee.getEmployeeId());
 
-        // 5. Populate entity
         payroll.setEmployee(realEmployee);
         payroll.setGrossSalary(realEmployee.getSalary());
         payroll.setTotalDeductions(deductions);
